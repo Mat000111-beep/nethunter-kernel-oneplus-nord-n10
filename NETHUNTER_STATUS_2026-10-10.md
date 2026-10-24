@@ -1,0 +1,138 @@
+# OnePlus Nord N10 (Billie/BE2028) NetHunter kernel status
+
+Date: 2026-10-10
+
+## Safety status
+
+**Do not flash any current Image or build a flashable ZIP yet.**
+
+The preferred research kernel now builds successfully from a much more complete Billie Android 11 source tree and preserves every shared exported-symbol CRC relative to its stock-equivalent baseline. It is still not proven compatible with the exact installed T-Mobile BE88CB kernel, because the closest complete source release is BE88CF and the locked phone does not expose its vendor-module CRCs or stock boot image.
+
+No unlock, reboot, partition read, partition write, or phone modification was performed.
+
+## Connected phone
+
+- Model/product: OnePlus Nord N10 5G, BE2028 / `OnePlusN10TMO`
+- OxygenOS: `11.0.2.BE88CB`
+- Full ID: `BE2028_17_O.32_211012_11.0.2.BE88CB_17`
+- OTA ID: `OnePlusN10TMOOxygen_14.O.32_GLO_0320_2110121446`
+- Fingerprint: `OnePlus/OnePlusN10TMO/OnePlusN10TMO:11/RKQ1.201217.002/2110121436:user/release-keys`
+- Kernel: `4.19.125-perf+`
+- Active slot: B
+- Bootloader: locked
+- Verified boot: green
+- Live stock compiler: Clang 10.0.7 for Android NDK
+- Live stock linker: GNU ld 2.27.0.20170315
+
+The read-only snapshot is in:
+
+`/run/media/Host/NETHUNTER-LAB/nethunter-n10-oos11-11.0.2-BE88CB-2026-10-09/live-phone-2026-10-10`
+
+## Improved source baseline
+
+The preferred source is now:
+
+`/home/Host/nethunter-n10/kernel-community-lineage18.1`
+
+- Repository: `https://github.com/oneplus-sm6350-devs/kernel_oneplus_sm6350`
+- Branch: `lineage-18.1`
+- Commit: `7f16c6771efe42590c64496bacaca350d8070102`
+- Commit description: `Synchronize codes for OnePlus Nord N10 Oxygen OS 11.0.2.BE88CF`
+
+Unlike the incomplete official SM6350 tree, this source includes the active EGIS fingerprint, FT3518 touchscreen, OnePlus charging, camera, display, and STMVL53L1 sensor sources. Its Billie defconfig differs from the live BE88CB config in only five entries before Kconfig normalization.
+
+One upstream source defect was corrected: `of_bootloader_log_platform_data()` was incorrectly marked init-only despite being called from the persistent platform-driver probe path.
+
+Six live config entries are still absent or disconnected after Kconfig normalization: alert-slider/hall options, an unused Synaptics alternative, and the disabled QCOM PMIC watchdog option. This phone model does not expose an alert slider, but the discrepancy remains part of the flash blocker.
+
+## Stock-equivalent baseline
+
+Output:
+
+`/run/media/Host/NETHUNTER-LAB/nethunter-n10-oos11-11.0.2-BE88CB-2026-10-09/stock-community-liveconfig`
+
+- Build: successful
+- Image size: 37,664,784 bytes
+- Image SHA-256: `c0628adfe820c7046c40dc9ee4b36519acbb704845fcbc87af1ea0005d96576a`
+- Module.symvers SHA-256: `4c65981d1306c883d739ac3426aba78ecf6996080c46f14368f250ef24a3c497`
+- Built modules: 35
+- Release/vermagic: `4.19.125-perf+ SMP preempt mod_unload modversions aarch64`
+
+The source build configuration requests Android Clang r383902 (11.0.1), while the installed stock kernel reports Android NDK Clang 10.0.7. The GNU linker version is an exact match.
+
+## Preferred NetHunter research candidate
+
+Artifacts:
+
+`/run/media/Host/NETHUNTER-LAB/nethunter-n10-oos11-11.0.2-BE88CB-2026-10-09/artifacts/community-wifi-first-preferred-2026-10-10`
+
+- Build: successful
+- Image size: 37,666,832 bytes
+- Image SHA-256: `262ab0f5a6dd193da61bcf738e62bf81043c107cbdd1655988babf11407779bd`
+- Config SHA-256: `a070b2b117a5f585f75efdb3682f19465822d38207a96fcf64a1808b65935cd5`
+- Module.symvers SHA-256: `082751772ecfb09c178252844e312f623d3df04642339a66c9c13389acf6cd57`
+- Source patch SHA-256: `4708f06e9549c830e44f3f6b09844d2bc9a98a867de4ee3b316295cb07f7cee9`
+
+ABI comparison against the complete-source stock-equivalent baseline:
+
+- Shared exported symbols: 12,607
+- Changed shared CRCs: 0
+- New exports: 251
+- Removed exports: 0
+
+Enabled additions include:
+
+- `MAC80211=m`, MT76 core, and `MT76x0U=m`
+- Kali 4.19 monitor/injection changes in cfg80211/mac80211
+- USB ACM, common USB serial adapters, and USB networking modules
+- USB configfs serial/ACM/OBEX/ECM/EEM functions
+- Bluetooth RFCOMM/TTY, HIDP, BTUSB, and VHCI
+- Forced module-signature enforcement disabled for bring-up
+
+Intentionally not enabled because they change broad stock ABI data:
+
+- `SYSVIPC`
+- `CFG80211_WEXT`
+- `MAC80211_MESH`
+
+## External Wi-Fi adapter
+
+Detected adapter:
+
+- USB ID: `0e8d:7610`
+- Driver: `mt76x0u`
+- Firmware: `mediatek/mt7610u.bin`
+- The built module has the exact `usb:v0E8Dp7610...` alias.
+
+Minimal new-module staging:
+
+`/run/media/Host/NETHUNTER-LAB/nethunter-n10-oos11-11.0.2-BE88CB-2026-10-09/staging/modules-community-wifi-first-minimal-2026-10-10`
+
+- New modules only: 27
+- All module vermagic values match `4.19.125-perf+ SMP preempt mod_unload modversions aarch64`.
+- The resolved MT7610U load order is `mac80211.ko`, `mt76.ko`, then `mt76x0.ko`.
+- Modules carry the autogenerated build key, but enforcement is disabled in this candidate.
+
+Firmware staging:
+
+`/run/media/Host/NETHUNTER-LAB/nethunter-n10-oos11-11.0.2-BE88CB-2026-10-09/staging/firmware-community-wifi-first-2026-10-10`
+
+- Firmware SHA-256: `5a4268e9021bb587426ba624b425f1e660bfc82cd63b36ad3ce6fb9ce6751760`
+- Debian/Kali firmware license file is included.
+
+Monitor mode is supported by this chipset/driver family, and the injection patch is present. Actual monitor and frame-injection tests on the phone have not yet been performed.
+
+## Unsafe comparison builds
+
+The earlier WEXT, mesh, and full-feature experiments remain preserved only for analysis. They must not be packaged or flashed. Clean testing confirmed that mesh alone changes 2,367 shared symbol CRCs in the earlier tree, including 2,196 built-in exports; WEXT and SYSVIPC are also broadly ABI-sensitive.
+
+## Remaining blockers before AnyKernel3 packaging
+
+1. The phone must be deliberately bootloader-unlocked. This factory-resets user data and requires explicit approval at the time of unlocking.
+2. After unlock, obtain verified backups of the exact active `boot_b`, `dtbo_b`, and relevant `vbmeta_b` partitions before testing anything.
+3. Obtain the exact installed vendor modules, especially the Qualcomm WLAN module, and compare their expected CRCs against this kernel.
+4. Resolve or consciously accept the BE88CF-source versus BE88CB-device and Clang 11.0.1 versus stock Clang 10.0.7 differences.
+5. Test a nonpersistent boot path first, then validate internal Wi-Fi, touchscreen, charging, cameras, fingerprint, Bluetooth, USB gadget functions, MT7610U monitor mode, and actual frame injection.
+6. Add the userspace USB Arsenal scripts, `/dev/hidg*` permissions, and SELinux policy only after the kernel boot is proven.
+
+Only after these gates pass should an A/B-aware AnyKernel3 ZIP be built. It should replace only the uncompressed `Image`, retain the installed ramdisk/Magisk state/boot DTB/command line, install only the 27 new modules plus firmware, and leave DTBO/VBMeta untouched.

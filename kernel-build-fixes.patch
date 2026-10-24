@@ -1,0 +1,170 @@
+diff --git a/arch/arm64/boot/dts/vendor/qcom/billie8-qrd.dtsi b/arch/arm64/boot/dts/vendor/qcom/billie8-qrd.dtsi
+index c11089325c0d..0b359c00855c 100755
+--- a/arch/arm64/boot/dts/vendor/qcom/billie8-qrd.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/billie8-qrd.dtsi
+@@ -205,7 +205,6 @@
+ 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+ 	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+ 	qcom,mdss-dsi-bl-min-level = <1>;
+-	qcom,mdss-dsi-bl-max-level = <255>;
+ 	qcom,mdss-dsi-bl-max-level = <4095>;
+ 	qcom,platform-reset-gpio = <&pm6150l_gpios 9 0>;
+ };
+@@ -214,7 +213,6 @@
+ 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+ 	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+ 	qcom,mdss-dsi-bl-min-level = <1>;
+-	qcom,mdss-dsi-bl-max-level = <255>;
+ 	qcom,mdss-dsi-bl-max-level = <4095>;
+ 	qcom,platform-reset-gpio = <&pm6150l_gpios 9 0>;
+ };
+@@ -223,7 +221,6 @@
+ 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+ 	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+ 	qcom,mdss-dsi-bl-min-level = <1>;
+-	qcom,mdss-dsi-bl-max-level = <255>;
+ 	qcom,mdss-dsi-bl-inverted-dbv;
+ 	qcom,mdss-dsi-bl-max-level = <4095>;
+ 	qcom,platform-reset-gpio = <&pm6150l_gpios 9 0>;
+@@ -233,7 +230,6 @@
+ 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+ 	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+ 	qcom,mdss-dsi-bl-min-level = <1>;
+-	qcom,mdss-dsi-bl-max-level = <255>;
+ 	qcom,mdss-dsi-bl-max-level = <4095>;
+ 	qcom,platform-te-gpio = <&tlmm 23 0>;
+ 	qcom,platform-reset-gpio = <&pm6150l_gpios 9 0>;
+@@ -243,7 +239,6 @@
+ 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+ 	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+ 	qcom,mdss-dsi-bl-min-level = <1>;
+-	qcom,mdss-dsi-bl-max-level = <255>;
+ 	qcom,mdss-dsi-bl-max-level = <4095>;
+ 	qcom,platform-te-gpio = <&tlmm 23 0>;
+ 	qcom,platform-reset-gpio = <&pm6150l_gpios 9 0>;
+@@ -253,7 +248,6 @@
+ 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply>;
+ 	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+ 	qcom,mdss-dsi-bl-min-level = <1>;
+-	qcom,mdss-dsi-bl-max-level = <255>;
+ 	qcom,mdss-dsi-bl-max-level = <4095>;
+ 	qcom,mdss-dsi-bl-inverted-dbv;
+ 	qcom,platform-te-gpio = <&tlmm 23 0>;
+diff --git a/arch/arm64/boot/dts/vendor/qcom/lagoon-cdp.dtsi b/arch/arm64/boot/dts/vendor/qcom/lagoon-cdp.dtsi
+index 49a499deb1cc..824554b618ed 100755
+--- a/arch/arm64/boot/dts/vendor/qcom/lagoon-cdp.dtsi
++++ b/arch/arm64/boot/dts/vendor/qcom/lagoon-cdp.dtsi
+@@ -301,7 +301,6 @@
+ 	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_144>;
+ 	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+ 	qcom,mdss-dsi-bl-min-level = <1>;
+-	qcom,mdss-dsi-bl-max-level = <255>;
+ 	qcom,mdss-dsi-bl-max-level = <4095>;
+ 	qcom,mdss-dsi-bl-inverted-dbv;
+ 	qcom,platform-te-gpio = <&tlmm 23 0>;
+diff --git a/drivers/oneplus/misc/bootloader_log.c b/drivers/oneplus/misc/bootloader_log.c
+index c4c23810cbf3..4a8f8a839024 100644
+--- a/drivers/oneplus/misc/bootloader_log.c
++++ b/drivers/oneplus/misc/bootloader_log.c
+@@ -67,7 +67,7 @@ static int proc_bootloader_log_init(void)
+ }
+ 
+ 
+-static int __init of_bootloader_log_platform_data(struct device_node *node,
++static int of_bootloader_log_platform_data(struct device_node *node,
+ 	struct bootloader_log_platform_data *pdata)
+ {
+ 	const u32 *addr;
+diff --git a/drivers/platform/msm/gsi/gsi.c b/drivers/platform/msm/gsi/gsi.c
+index 4c8fbb903607..4eff7eac1fba 100755
+--- a/drivers/platform/msm/gsi/gsi.c
++++ b/drivers/platform/msm/gsi/gsi.c
+@@ -2549,7 +2549,7 @@ static int gsi_alloc_ap_channel(unsigned int chan_hdl)
+ }
+ 
+ static void __gsi_write_channel_scratch(unsigned long chan_hdl,
+-		union __packed gsi_channel_scratch val)
++		union gsi_channel_scratch val)
+ {
+ 	gsi_writel(val.data.word1, gsi_ctx->base +
+ 		GSI_EE_n_GSI_CH_k_SCRATCH_0_OFFS(chan_hdl,
+@@ -2630,7 +2630,7 @@ int gsi_write_channel_scratch2_reg(unsigned long chan_hdl,
+ EXPORT_SYMBOL(gsi_write_channel_scratch2_reg);
+ 
+ static void __gsi_read_channel_scratch(unsigned long chan_hdl,
+-		union __packed gsi_channel_scratch * val)
++		union gsi_channel_scratch * val)
+ {
+ 	val->data.word1 = gsi_readl(gsi_ctx->base +
+ 		GSI_EE_n_GSI_CH_k_SCRATCH_0_OFFS(chan_hdl,
+@@ -2649,10 +2649,10 @@ static void __gsi_read_channel_scratch(unsigned long chan_hdl,
+ 			gsi_ctx->per.ee));
+ }
+ 
+-static union __packed gsi_channel_scratch __gsi_update_mhi_channel_scratch(
++static union gsi_channel_scratch __gsi_update_mhi_channel_scratch(
+ 	unsigned long chan_hdl, struct __packed gsi_mhi_channel_scratch mscr)
+ {
+-	union __packed gsi_channel_scratch scr;
++	union gsi_channel_scratch scr;
+ 
+ 	/* below sequence is not atomic. assumption is sequencer specific fields
+ 	 * will remain unchanged across this sequence
+@@ -2709,7 +2709,7 @@ static union __packed gsi_channel_scratch __gsi_update_mhi_channel_scratch(
+ }
+ 
+ int gsi_write_channel_scratch(unsigned long chan_hdl,
+-		union __packed gsi_channel_scratch val)
++		union gsi_channel_scratch val)
+ {
+ 	struct gsi_chan_ctx *ctx;
+ 
+@@ -2742,7 +2742,7 @@ int gsi_write_channel_scratch(unsigned long chan_hdl,
+ EXPORT_SYMBOL(gsi_write_channel_scratch);
+ 
+ int gsi_read_channel_scratch(unsigned long chan_hdl,
+-		union __packed gsi_channel_scratch *val)
++		union gsi_channel_scratch *val)
+ {
+ 	struct gsi_chan_ctx *ctx;
+ 
+diff --git a/include/linux/msm_gsi.h b/include/linux/msm_gsi.h
+index 177e1abdd543..94fa5d42f6bb 100644
+--- a/include/linux/msm_gsi.h
++++ b/include/linux/msm_gsi.h
+@@ -1275,7 +1275,7 @@ int gsi_alloc_channel(struct gsi_chan_props *props, unsigned long dev_hdl,
+  * @Return gsi_status
+  */
+ int gsi_write_channel_scratch(unsigned long chan_hdl,
+-		union __packed gsi_channel_scratch val);
++		union gsi_channel_scratch val);
+ 
+ /**
+  * gsi_write_channel_scratch3_reg - Peripheral should call this function to
+@@ -1314,7 +1314,7 @@ int gsi_write_channel_scratch2_reg(unsigned long chan_hdl,
+  * @Return gsi_status
+  */
+ int gsi_read_channel_scratch(unsigned long chan_hdl,
+-		union __packed gsi_channel_scratch *val);
++		union gsi_channel_scratch *val);
+ 
+ /**
+  * gsi_pending_irq_type - Peripheral should call this function to
+@@ -1778,7 +1778,7 @@ static inline int gsi_alloc_channel(struct gsi_chan_props *props,
+ }
+ 
+ static inline int gsi_write_channel_scratch(unsigned long chan_hdl,
+-		union __packed gsi_channel_scratch val)
++		union gsi_channel_scratch val)
+ {
+ 	return -GSI_STATUS_UNSUPPORTED_OP;
+ }
+@@ -1795,7 +1795,7 @@ static inline int gsi_write_channel_scratch2_reg(unsigned long chan_hdl,
+ }
+ 
+ static inline int gsi_read_channel_scratch(unsigned long chan_hdl,
+-		union __packed gsi_channel_scratch *val)
++		union gsi_channel_scratch *val)
+ {
+ 	return -GSI_STATUS_UNSUPPORTED_OP;
+ }
